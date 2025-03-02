@@ -23,8 +23,8 @@ def main(latlng_list, map_type):
     tile_array = load_tiles(session, zoom, tile_bounds, map_type)
 
     # Initialize pygame
-    screen, clock, screen_width, screen_height =py_draw.initialize_pygame(
-        conversion.calculate_delta_tiles(tile_bounds))
+    screen, clock, screen_width, screen_height = py_draw.initialize_pygame(
+        conversion.calculate_delta_tiles(tile_bounds), image_size)
 
     # Main loop
     running = True
@@ -35,10 +35,10 @@ def main(latlng_list, map_type):
         py_draw.draw_background(screen, (255, 255, 255))
 
         # Draw tiles to screen
-        py_draw.draw_tiles_to_screen(screen, tile_array)
+        py_draw.draw_tiles_to_screen(screen, tile_array, image_size)
 
         # Draw grid
-        # py_draw.draw_grid(screen, screen_width, screen_height)
+        py_draw.draw_grid(screen, screen_width, screen_height, image_size)
 
         # Draw connecting outline lines 
         py_draw.draw_connecting_lines(screen, latlng_list, zoom, tile_bounds, image_size , (0, 0, 0), 11)
@@ -105,7 +105,7 @@ if __name__ == "__main__":
     # latlng_list1
     # latlng_list2
     # latlng_list3
-    current_list = latlng_list3
+    current_list = latlng_list2
 
     # Call the main function
     main(current_list, 'satellite')

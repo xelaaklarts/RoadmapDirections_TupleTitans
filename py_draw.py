@@ -3,10 +3,10 @@ import pygame
 import conversion
 
 # Initializes pygame
-def initialize_pygame(delta_tiles):
+def initialize_pygame(delta_tiles, image_size):
     pygame.init()
-    screen_width = delta_tiles[0]*256
-    screen_height = delta_tiles[1]*256
+    screen_width = delta_tiles[0] * image_size[0]
+    screen_height = delta_tiles[1] * image_size[1]
     window_name = "Map Visualizer - Tuple Titans"
     pygame.display.set_caption(window_name)
     screen = pygame.display.set_mode((screen_width, screen_height))
@@ -18,13 +18,13 @@ def draw_background(screen, colour):
     screen.fill(colour)
 
 # Draws grid to screen
-def draw_grid(screen, width, height):
+def draw_grid(screen, width, height, image_size):
     # Draw vertical lines
-    for x in range(0, width, 256):
+    for x in range(0, width, image_size[0]):
         pygame.draw.line(screen, (0, 0, 0), (x, 0), (x, height), 2)
 
     # Draw horizontal lines
-    for y in range(0, height, 256):
+    for y in range(0, height, image_size[1]):
         pygame.draw.line(screen, (0, 0, 0), (0, y), (width, y), 2)
 
 # Draws latlng points to screen
@@ -47,10 +47,10 @@ def draw_connecting_lines(screen, latlng_list, zoom, tile_bounds, image_size, li
                          (int(point2['pixel_x']), int(point2['pixel_y'])), line_width)
 
 # Draws tiles to screen
-def draw_tiles_to_screen(screen, tile_array):
+def draw_tiles_to_screen(screen, tile_array, image_size):
     for y, tile_row in enumerate(tile_array):
         for x, tile in enumerate(tile_row):
-            screen.blit(tile, (x * 256, y * 256))
+            screen.blit(tile, (x * image_size[0], y * image_size[1]))
 
 # Updates the display
 def update_screen():
