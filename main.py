@@ -40,8 +40,14 @@ def main(latlng_list, map_type):
         # Draw grid
         py_draw.draw_grid(screen, screen_width, screen_height)
 
+        # Draw connecting lines
+        py_draw.draw_connecting_lines(screen, latlng_list, zoom, tile_bounds, image_size , (255, 0, 0), 5)
+
+        # Draw latlng outline points
+        py_draw.draw_latlng_points(screen, latlng_list, zoom, tile_bounds, image_size, (0, 0, 0), 8, (0, 0, 0), 24)
+
         # Draw latlng points
-        py_draw.draw_latlng_points(screen, latlng_list, zoom, tile_bounds, image_size)
+        py_draw.draw_latlng_points(screen, latlng_list, zoom, tile_bounds, image_size, (255, 0, 0), 5, (0, 0, 0), 24)
         
         # Update the display
         py_draw.update_screen()

@@ -22,18 +22,23 @@ def draw_grid(screen, width, height):
         pygame.draw.line(screen, (0, 0, 0), (0, y), (width, y), 2)
 
 # Draws latlng points to screen
-def draw_latlng_points(screen, latlng_list, zoom, tile_bounds, image_size):
-    point_colour = (255, 0, 0)
-    text_colour = (0, 0, 0)
+def draw_latlng_points(screen, latlng_list, zoom, tile_bounds, image_size, point_colour, point_size, text_colour, font_size):
     for latlng in latlng_list:
         point = conversion.from_latlng_to_pixel(latlng[0], latlng[1], zoom, tile_bounds, image_size)
-        pygame.draw.circle(screen, point_colour, (int(point['pixel_x']), int(point['pixel_y'])), 5)
+        pygame.draw.circle(screen, point_colour, (int(point['pixel_x']), int(point['pixel_y'])), point_size)
 
         # Draw point text if it exists
         if len(latlng) == 3:
-            font = pygame.font.Font(None, 24)
+            font = pygame.font.Font(None, font_size)
             text = font.render(latlng[2], True, text_colour)
-            screen.blit(text, (int(point['pixel_x'] - text.get_width() / 2), int(point['pixel_y'] + text.get_height() / 2)))
+            screen.blit(text, (int(point['pixel_x'] - text.get_width() / 2), int(point['pixel_y'] + text.get_height())))
+
+def draw_connecting_lines(screen, latlng_list, zoom, tile_bounds, image_size, line_colour, line_width):
+    for i in range(len(latlng_list) - 1):
+        point1 = conversion.from_latlng_to_pixel(latlng_list[i][0], latlng_list[i][1], zoom, tile_bounds, image_size)
+        point2 = conversion.from_latlng_to_pixel(latlng_list[i + 1][0], latlng_list[i + 1][1], zoom, tile_bounds, image_size)
+        pygame.draw.line(screen, line_colour, (int(point1['pixel_x']), int(point1['pixel_y'])),
+                         (int(point2['pixel_x']), int(point2['pixel_y'])), line_width)
 
 # Draws tiles to screen
 def draw_tiles_to_screen(screen, tile_array):
