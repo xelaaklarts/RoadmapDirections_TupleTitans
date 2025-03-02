@@ -1,3 +1,4 @@
+# Import required libraries
 from request import load_tiles
 from request import create_session
 import py_draw
@@ -6,10 +7,11 @@ import conversion
 # Constants
 FPS = 60
 
+# Main function
 def main(latlng_list, map_type):
     # Make session
     session, image_width, image_height = create_session(map_type)
-    
+
     # Temporary fix for image size
     # Ensures that the image is square for now
     image_size = image_height
@@ -47,6 +49,7 @@ def main(latlng_list, map_type):
         # Cap the frame rate
         clock.tick(FPS)
     
+    # Quit pygame
     py_draw.pygame_quit()
 
 # Beginning of the script
@@ -55,30 +58,21 @@ if __name__ == "__main__":
     # Example latlng_list cities
     latlng_list1 = [
         (37.7749, -122.4194, "San Francisco"),  # San Francisco
-        (34.0522, -118.2437, "Los Angeles"),  # Los Angeles
+        (34.0522, -118.2437, "Los Angeles"),    # Los Angeles
         (40.7128, -74.0060, "New York City"),   # New York City
-        (41.8781, -87.6298, "Chicago")    # Chicago
+        (41.8781, -87.6298, "Chicago")          # Chicago
     ]
     
     # Example latlng_list 30 Carlton
     latlng_list2 = [
-        (43.0012504080768, -81.24015792478556, "One"),
-        (43.00123079203837, -81.23852177737326, "Two"),
-        (43.00002243199465, -81.24010428060811, "Three"),
-        (43.00024754206482, -81.23878458158435, "Four")
+        (43.0012504080768, -81.24015792478556, "One"),     # Point One
+        (43.00123079203837, -81.23852177737326, "Two"),    # Point Two
+        (43.00002243199465, -81.24010428060811, "Three"),  # Point Three
+        (43.00024754206482, -81.23878458158435, "Four")    # Point Four
     ]
 
     # Change this to whatever latlng_list you want to use
     current_list = latlng_list2
 
-    cordinate_bounds = conversion.find_coordinate_bounds_from_list(current_list)
-    print(cordinate_bounds)
-
-    tile_bounds = conversion.calculate_tile_bounds_given_coordinate_bounds(cordinate_bounds, 19, 256)
-    print(tile_bounds)
-
-    zoom = conversion.calculate_maximum_zoom_level(current_list, 256)
-    print(zoom)
-
-    map_type = 'roadmap'
-    main(current_list, map_type)
+    # Call the main function
+    main(current_list, 'roadmap')

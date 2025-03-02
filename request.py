@@ -1,3 +1,4 @@
+# Import required libraries
 from pygame.image import load
 from os.path import exists
 from os import getenv
@@ -54,6 +55,7 @@ def get_tile(session, z, x, y):
     else:
         print(f"Failed to fetch tile: {response.status_code}, {response.text}")
 
+# Function to request tiles for a given tile bounds
 def request_tiles(session, tile_bounds, zoom):
     # Request tiles
     for x in range(tile_bounds['min_tile_x'], tile_bounds['max_tile_x'] + 1):
@@ -61,7 +63,8 @@ def request_tiles(session, tile_bounds, zoom):
             # Check if tile already exists
             if not exists(f"tile_{zoom}_{x}_{y}_0.png"):
                 get_tile(session, zoom, x, y)
-            
+
+# Function to load tiles into a 2D array            
 def load_tiles(session, zoom, tile_bounds):
     # Request tiles
     request_tiles(session, tile_bounds, zoom)

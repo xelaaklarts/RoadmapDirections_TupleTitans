@@ -1,6 +1,8 @@
+# Import required libraries
 import pygame
 import conversion
 
+# Initializes pygame
 def initialize_pygame():
     pygame.init()
     screen_width = 2*256
@@ -19,6 +21,7 @@ def draw_grid(screen, width, height):
     for y in range(0, height, 256):
         pygame.draw.line(screen, (0, 0, 0), (0, y), (width, y), 2)
 
+# Draws latlng points to screen
 def draw_latlng_points(screen, latlng_list, zoom, tile_bounds, image_size):
     point_colour = (255, 0, 0)
     text_colour = (0, 0, 0)
@@ -32,17 +35,21 @@ def draw_latlng_points(screen, latlng_list, zoom, tile_bounds, image_size):
             text = font.render(latlng[2], True, text_colour)
             screen.blit(text, (int(point['pixel_x'] - text.get_width() / 2), int(point['pixel_y'] + text.get_height() / 2)))
 
+# Draws tiles to screen
 def draw_tiles_to_screen(screen, tile_array):
     for y, tile_row in enumerate(tile_array):
         for x, tile in enumerate(tile_row):
             screen.blit(tile, (x * 256, y * 256))
 
+# Updates the display
 def update_screen():
     pygame.display.flip()
 
+# Quits pygame
 def pygame_quit():
     pygame.quit()
 
+# Checks if pygame is still running
 def check_if_running():
     for event in pygame.event.get():
         if event.type == pygame.QUIT:

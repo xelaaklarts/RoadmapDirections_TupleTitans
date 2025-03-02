@@ -1,3 +1,4 @@
+# Import required libraries
 import math
 
 def from_latlng_to_point(lat, lng, zoom, image_size):
