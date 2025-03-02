@@ -77,7 +77,9 @@ def load_tiles(session, zoom, tile_bounds):
         tile_array.append(tile_row)   
     return tile_array
     
-# Example usage
+# Example use
+# Print world map
+# Will not if API key is not set
 if __name__ == "__main__":
     session = create_session("roadmap")
     get_tile(session, 0, 0, 0, 0)

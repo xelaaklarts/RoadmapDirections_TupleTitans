@@ -34,20 +34,26 @@ def main(latlng_list, map_type):
     while running:
         running = py_draw.check_if_running()
 
+        # Draw background
+        py_draw.draw_background(screen, (255, 255, 255))
+
         # Draw tiles to screen
         py_draw.draw_tiles_to_screen(screen, tile_array)
 
         # Draw grid
         # py_draw.draw_grid(screen, screen_width, screen_height)
 
+        # Draw connecting outline lines 
+        py_draw.draw_connecting_lines(screen, latlng_list, zoom, tile_bounds, image_size , (0, 0, 0), 11)
+
         # Draw connecting lines
-        py_draw.draw_connecting_lines(screen, latlng_list, zoom, tile_bounds, image_size , (255, 0, 0), 9)
+        py_draw.draw_connecting_lines(screen, latlng_list, zoom, tile_bounds, image_size , (255, 0, 0), 6)
 
         # Draw latlng outline points
         py_draw.draw_latlng_points(screen, latlng_list, zoom, tile_bounds, image_size, (0, 0, 0), 8, (0, 0, 0), 24)
 
         # Draw latlng points
-        py_draw.draw_latlng_points(screen, latlng_list, zoom, tile_bounds, image_size, (255, 0, 0), 5, (0, 0, 0), 24)
+        py_draw.draw_latlng_points(screen, latlng_list, zoom, tile_bounds, image_size, (255, 0, 0), 4, (0, 0, 0), 24)
         
         # Update the display
         py_draw.update_screen()
@@ -84,7 +90,24 @@ if __name__ == "__main__":
         (43.00019041833122, -81.23718438812998, "Four"),  # Point Four
         (43.00218259138162, -81.23817319573764, "five"),  # Point Five
         (43.00246718226428, -81.23715249106445, "Six"),   # Point Six
-        (43.0017160461225, -81.23679524445441, "Seven")  # Point Seven
+        (43.0017160461225, -81.23679524445441, "Seven")   # Point Seven
+    ]
+
+    latlng_list4 = [
+        (43.00602936065563, -81.2626887034016),     # Point One
+        (43.005457938808725, -81.26464547108368),   # Point Two
+        (43.00774527933711, -81.26578403298055),    # Point Three
+        (43.007562814169994, -81.26658512578999),   # Point Four
+        (43.00799976932445, -81.26992739018466),    # Point Five
+        (43.007258055274754, -81.2699922030991),    # Point Six
+        (43.00629302043631, -81.2703566291976),     # Point Seven
+        (43.006107279776245, -81.27088670348355),   # Point Eight
+        (43.0062647555907, -81.27177016070905),     # Point Nine
+        (43.0066484499922, -81.2734772492384),      # Point Ten
+        (43.00626081891621, -81.27484660781047),    # Point Eleven
+        (43.00638195389022, -81.27517238263205),    # Point Twelve
+        (43.006620185318695, -81.27537116060049),   # Point Thirteen
+        (43.006620185318695, -81.27573558667208)    # Point Fourteen
     ]
 
     # Change this to whatever latlng_list you want to use

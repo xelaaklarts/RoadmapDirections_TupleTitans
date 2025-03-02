@@ -7,9 +7,15 @@ def initialize_pygame():
     pygame.init()
     screen_width = 2*256
     screen_height = 2*256
+    window_name = "Map Visualizer - Tuple Titans"
+    pygame.display.set_caption(window_name)
     screen = pygame.display.set_mode((screen_width, screen_height))
     clock = pygame.time.Clock()
     return screen, clock, screen_width, screen_height
+
+# Draws background to screen
+def draw_background(screen, colour):
+    screen.fill(colour)
 
 # Draws grid to screen
 def draw_grid(screen, width, height):
