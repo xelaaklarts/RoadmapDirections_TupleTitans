@@ -3,10 +3,10 @@ import pygame
 import conversion
 
 # Initializes pygame
-def initialize_pygame():
+def initialize_pygame(delta_tiles):
     pygame.init()
-    screen_width = 2*256
-    screen_height = 2*256
+    screen_width = delta_tiles[0]*256
+    screen_height = delta_tiles[1]*256
     window_name = "Map Visualizer - Tuple Titans"
     pygame.display.set_caption(window_name)
     screen = pygame.display.set_mode((screen_width, screen_height))

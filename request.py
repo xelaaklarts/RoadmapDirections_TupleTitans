@@ -24,7 +24,7 @@ def create_session(map_type):
     if response.status_code == 200:
         session_data = response.json()
         print(f"Session created successfully: {session_data}")
-        return session_data.get("session"), session_data.get("tileWidth"), session_data.get("tileHeight")
+        return session_data.get("session"), (session_data.get("tileWidth"), session_data.get("tileHeight"))
     else:
         raise Exception(f"Failed to create session: {response.status_code}, {response.text}")
 
@@ -79,7 +79,7 @@ def load_tiles(session, zoom, tile_bounds):
     
 # Example use
 # Print world map
-# Will not if API key is not set
+# Will not work if API key is not set
 if __name__ == "__main__":
     session = create_session("roadmap")
     get_tile(session, 0, 0, 0, 0)
