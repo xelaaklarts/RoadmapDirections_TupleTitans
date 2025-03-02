@@ -32,7 +32,7 @@ def from_latlng_to_tile_coord(lat, lng, zoom, image_size):
     }
 
 # Calculate max zoom level that is able to encompass all latlng coordinates
-def calculate_maximum_zoom_level(latlng_list, image_size):
+def calculate_maximum_zoom_level(latlng_list, image_size, extra_zoom):
     latlng_bounds = find_coordinate_bounds_from_list(latlng_list)
     latlng_list = [(latlng_bounds['min_lat'], latlng_bounds['min_lng']),
                    (latlng_bounds['max_lat'], latlng_bounds['max_lng'])]
@@ -45,7 +45,7 @@ def calculate_maximum_zoom_level(latlng_list, image_size):
     max_zoom = int(math.floor(math.log2(image_size[0] / (coordinate_bounds['max_lng'] - coordinate_bounds['min_lng']))))
 
     # Add 1 to the zoom level to ensure that the entire area is covered when accounting for tile location
-    return max_zoom + 1
+    return max_zoom + extra_zoom + 1
 
 # Finds the bounds of a list of latlng coordinates
 def find_coordinate_bounds_from_list(latlng_list):

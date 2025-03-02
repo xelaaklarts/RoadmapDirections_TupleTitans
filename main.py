@@ -13,7 +13,8 @@ def main(latlng_list, map_type):
     session, image_size = create_session(map_type)
 
     # Calculate the minimum zoom level
-    zoom = conversion.calculate_maximum_zoom_level(latlng_list, image_size)
+    # Add extra zoom to increase accuracy
+    zoom = conversion.calculate_maximum_zoom_level(latlng_list, image_size, 0)
 
     # Get the tile bounds
     tile_bounds = conversion.calculate_tile_bounds_given_coordinate_bounds(
@@ -101,11 +102,22 @@ if __name__ == "__main__":
         (43.006620185318695, -81.27573558667208)    # Point Fourteen
     ]
 
+    latlng_list4 = [
+        (43.000829888040506, -81.23819051256874, "One"),    # Point One
+        (43.000829888040506, -81.25035435025111, "Two"),     # Point Two
+        (43.000829888040506, -81.25515292852671, "Three"),   # Point Three
+        (43.000829888040506, -81.26182072047506, "Four"),    # Point Four
+        (43.000829888040506, -81.26675879234801, "Five"),   # Point Five
+        (43.000829888040506, -81.27521210166836, "Six"),    # Point Six
+        (42.996157297508980, -81.27521210166836, "Seven")   # Point Seven
+    ]
+
     # Change this to whatever latlng_list test case you want to use:
     # latlng_list1
     # latlng_list2
     # latlng_list3
-    current_list = latlng_list2
+    # latlng_list4
+    current_list = latlng_list4
 
     # Call the main function
-    main(current_list, 'satellite')
+    main(current_list, 'roadmap')
