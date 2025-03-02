@@ -29,23 +29,32 @@ def create_session(map_type):
         raise Exception(f"Failed to create session: {response.status_code}, {response.text}")
 
 # Function to get tiles for a specific z, x, y tile coordinates
-def get_tile(session, z, x, y):
+def get_tile(session, z, x, y, map_type):
     url = TILE_URL_TEMPLATE.format(z=z, x=x, y=y)
-    params = {
-        "session": session,
-        "key": API_KEY,
-        "orientation": 0
-    }
+    if map_type == 'roadmap':
+        params = {
+            "session": session,
+            "key": API_KEY,
+            "orientation": 0
+        }
+    elif map_type == 'satellite':
+        params = {
+            "session": session,
+            "key": API_KEY
+        }
+    else:
+        print("Unsupported map type. Please use 'roadmap' or 'satellite'.")
+    
     # Make the request
     response = requests.get(url, params=params)
     # Check if the request was successful
     if response.status_code == 200:
         content_type = response.headers.get('Content-Type')
         if 'image' in content_type:
-            with open(f"tile_{z}_{x}_{y}_0.png", "wb") as file:
+            with open(f"tile_{z}_{x}_{y}_0_{map_type}.png", "wb") as file:
                 # Save the image
                 file.write(response.content)
-            print(f"Tile saved successfully. Named: tile_{z}_{x}_{y}_0.png")    
+            print(f"Tile saved successfully. Named: tile_{z}_{x}_{y}_0_{map_type}.png")    
         else:
             print(f"Unexpected content type: {content_type}")
             try:
@@ -56,24 +65,24 @@ def get_tile(session, z, x, y):
         print(f"Failed to fetch tile: {response.status_code}, {response.text}")
 
 # Function to request tiles for a given tile bounds
-def request_tiles(session, tile_bounds, zoom):
+def request_tiles(session, tile_bounds, zoom, map_type):
     # Request tiles
     for x in range(tile_bounds['min_tile_x'], tile_bounds['max_tile_x'] + 1):
         for y in range(tile_bounds['min_tile_y'], tile_bounds['max_tile_y'] + 1):
             # Check if tile already exists
-            if not exists(f"tile_{zoom}_{x}_{y}_0.png"):
-                get_tile(session, zoom, x, y)
+            if not exists(f"tile_{zoom}_{x}_{y}_0_{map_type}.png"):
+                get_tile(session, zoom, x, y, map_type)
 
 # Function to load tiles into a 2D array            
-def load_tiles(session, zoom, tile_bounds):
+def load_tiles(session, zoom, tile_bounds, map_type):
     # Request tiles
-    request_tiles(session, tile_bounds, zoom)
+    request_tiles(session, tile_bounds, zoom, map_type)
     # Load tiles into 2D array
     tile_array = []
     for y in range(tile_bounds['min_tile_y'], tile_bounds['max_tile_y'] + 1):
         tile_row = []
         for x in range(tile_bounds['min_tile_x'], tile_bounds['max_tile_x'] + 1):
-            tile_row.append(load(f"tile_{zoom}_{x}_{y}_0.png"))
+            tile_row.append(load(f"tile_{zoom}_{x}_{y}_0_{map_type}.png"))
         tile_array.append(tile_row)   
     return tile_array
     
@@ -81,5 +90,5 @@ def load_tiles(session, zoom, tile_bounds):
 # Print world map
 # Will not work if API key is not set
 if __name__ == "__main__":
-    session = create_session("roadmap")
-    get_tile(session, 0, 0, 0, 0)
+    session = create_session('satellite')
+    get_tile(session[0], 15, 6294, 13288, 'satellite')

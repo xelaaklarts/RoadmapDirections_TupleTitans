@@ -20,7 +20,7 @@ def main(latlng_list, map_type):
         conversion.find_coordinate_bounds_from_list(latlng_list), zoom, image_size)
 
     # Request tiles
-    tile_array = load_tiles(session, zoom, tile_bounds)
+    tile_array = load_tiles(session, zoom, tile_bounds, map_type)
 
     # Initialize pygame
     screen, clock, screen_width, screen_height =py_draw.initialize_pygame(
@@ -101,8 +101,11 @@ if __name__ == "__main__":
         (43.006620185318695, -81.27573558667208)    # Point Fourteen
     ]
 
-    # Change this to whatever latlng_list you want to use
+    # Change this to whatever latlng_list test case you want to use:
+    # latlng_list1
+    # latlng_list2
+    # latlng_list3
     current_list = latlng_list3
 
     # Call the main function
-    main(current_list, 'roadmap')
+    main(current_list, 'satellite')
