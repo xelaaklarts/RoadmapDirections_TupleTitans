@@ -38,10 +38,10 @@ def main(latlng_list, map_type):
         py_draw.draw_tiles_to_screen(screen, tile_array)
 
         # Draw grid
-        py_draw.draw_grid(screen, screen_width, screen_height)
+        # py_draw.draw_grid(screen, screen_width, screen_height)
 
         # Draw connecting lines
-        py_draw.draw_connecting_lines(screen, latlng_list, zoom, tile_bounds, image_size , (255, 0, 0), 5)
+        py_draw.draw_connecting_lines(screen, latlng_list, zoom, tile_bounds, image_size , (255, 0, 0), 9)
 
         # Draw latlng outline points
         py_draw.draw_latlng_points(screen, latlng_list, zoom, tile_bounds, image_size, (0, 0, 0), 8, (0, 0, 0), 24)
@@ -77,8 +77,18 @@ if __name__ == "__main__":
         (43.00024754206482, -81.23878458158435, "Four")    # Point Four
     ]
 
+    latlng_list3 = [
+        (43.00072978730011, -81.23937016482253, "One"),   # Point One
+        (43.00042339276636, -81.2404807902414, "Two"),    # Point Two
+        (42.9994065948314, -81.23998494646074, "Three"),  # Point Three
+        (43.00019041833122, -81.23718438812998, "Four"),  # Point Four
+        (43.00218259138162, -81.23817319573764, "five"),  # Point Five
+        (43.00246718226428, -81.23715249106445, "Six"),   # Point Six
+        (43.0017160461225, -81.23679524445441, "Seven")  # Point Seven
+    ]
+
     # Change this to whatever latlng_list you want to use
-    current_list = latlng_list2
+    current_list = latlng_list3
 
     # Call the main function
     main(current_list, 'roadmap')
