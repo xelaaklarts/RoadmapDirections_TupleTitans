@@ -12,9 +12,11 @@ TILE_URL_TEMPLATE = "https://tile.googleapis.com/v1/2dtiles/{z}/{x}/{y}"
 # Get the API key from environment variables
 API_KEY = getenv("GOOGLE_MAPS_API_KEY")
 
+# Check if API key is set
 if not API_KEY:
     raise ValueError("API key not found. Please set the GOOGLE_MAPS_API_KEY environment variable.")
 
+# Create a directory for tiles if it doesn't exist
 tiles_directory = "tiles"
 if not exists(tiles_directory):
     makedirs(tiles_directory)
@@ -92,6 +94,7 @@ def load_tiles(session, zoom, tile_bounds, map_type):
         tile_array.append(tile_row)   
     return tile_array
 
+# Function to remove tile file
 def remove_tiles():
     shutil.rmtree("tiles")
     

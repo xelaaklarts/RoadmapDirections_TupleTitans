@@ -6,8 +6,6 @@ import pygame
 # Initializes pygame
 def initialize_pygame(delta_tiles, image_size):
     pygame.init()
-    # screen_width = delta_tiles[0] * image_size[0]
-    # screen_height = delta_tiles[1] * image_size[1]
     # IMPORTANT: Windows display scale effects window size!
     screen_width = 1400
     screen_height = 800
@@ -31,11 +29,11 @@ def draw_grid(screen, delta_tiles, image_size, colour, thickness, screen_offset)
                          (delta_tiles[0] * image_size[0] + screen_offset[0], y * image_size[1] + screen_offset[1]), thickness)
 
 # Draws cursor circle to screen
-def draw_cursor_circle(screen, cursor_size):
-    if key.is_left_mouse_pressed():
-        pygame.draw.circle(screen, (255, 0, 0), (key.mouse_position()[0], key.mouse_position()[1]), cursor_size + 6)
-    pygame.draw.circle(screen, (0, 0, 0), (key.mouse_position()[0], key.mouse_position()[1]), cursor_size + 3)
-    pygame.draw.circle(screen, (255, 255, 255), (key.mouse_position()[0], key.mouse_position()[1]), cursor_size)
+def draw_cursor_circle(screen, cursor_size, current_mouse_pos, left_mouse_pressed, events):
+    if left_mouse_pressed:
+        pygame.draw.circle(screen, (255, 0, 0), (key.mouse_position(current_mouse_pos, events)[0], key.mouse_position(current_mouse_pos, events)[1]), cursor_size + 6)
+    pygame.draw.circle(screen, (0, 0, 0), (key.mouse_position(current_mouse_pos, events)[0], key.mouse_position(current_mouse_pos, events)[1]), cursor_size + 3)
+    pygame.draw.circle(screen, (255, 255, 255), (key.mouse_position(current_mouse_pos, events)[0], key.mouse_position(current_mouse_pos, events)[1]), cursor_size)
 
 # Draws latlng points to screen
 def draw_latlng_points(screen, latlng_list, zoom, tile_bounds, image_size, point_colour, point_size, outline_colour, outline_thickness, text_colour, font_size, font_outline_size, screen_offset):
@@ -92,18 +90,20 @@ def draw_tiles_to_screen(screen, tile_array, image_size, screen_offset):
 def draw_activation_bounds(screen, window_size):
     pygame.draw.rect(screen, (0, 255, 0), (window_size[0]/4, window_size[1]/4, 2*window_size[0]/4, 2*window_size[1]/4), 5)
 
+# Draws debug center screen circle to screen
 def draw_center_screen_circle(screen, window_size):
     pygame.draw.circle(screen, (255, 0, 0), (window_size[0] / 2, window_size[1] / 2), 10)
 
+# Draws debug center screen to 0,0 offset line to screen
 def draw_center_screen_to_0_0_offset(screen, window_size, screen_offset):
     pygame.draw.line(screen, (0, 0, 0), (window_size[0]/2, window_size[1]/2), (screen_offset[0], screen_offset[1]), 5)
 
 # Calculates the new screen offset based on mouse movement
 # Does not allow the tiles to be dragged off screen!
 # Collision detection is based on the tile bounds, screen offset, image size, and window size
-def calculate_draw_offset(screen_offset, last_mouse_pos, current_mouse_pos, tile_bounds, image_size, collisions):
+def calculate_draw_offset(screen_offset, last_mouse_pos, current_mouse_pos, tile_bounds, image_size, collisions, left_mouse_pressed):
     # Mouse movement
-    if key.is_left_mouse_pressed():
+    if left_mouse_pressed:
         delta_x = current_mouse_pos[0] - last_mouse_pos[0]
         delta_y = current_mouse_pos[1] - last_mouse_pos[1]
         last_mouse_pos = current_mouse_pos
@@ -120,7 +120,7 @@ def calculate_draw_offset(screen_offset, last_mouse_pos, current_mouse_pos, tile
         screen_offset = (window_size[0] / 2 - delta_tile_pixel[0], screen_offset[1])
     if screen_offset[1] < window_size[1] / 2 - delta_tile_pixel[1]:
         screen_offset = (screen_offset[0], window_size[1] / 2 - delta_tile_pixel[1])
-    # Secondary collision detection
+    # Secondary collision detection with window bounds
     if collisions:
         if screen_offset[0] > 0:
             screen_offset = (0, screen_offset[1])
@@ -145,8 +145,8 @@ def pygame_quit():
     pygame.quit()
 
 # Checks if pygame is still running
-def check_if_running():
-    for event in pygame.event.get():
+def check_if_running(events):
+    for event in events:
         if event.type == pygame.QUIT:
             return False
     return True
