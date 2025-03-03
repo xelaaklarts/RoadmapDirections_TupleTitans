@@ -21,6 +21,35 @@ def from_latlng_to_pixel(lat, lng, zoom, tile_bounds, image_size):
     'pixel_y' : (tile_y - tile_bounds['min_tile_y']) * image_size[1] + offset_y
     }
 
+# Converts pixel coordinates to latlng coordinates
+def from_pixel_to_latlng(pixel, tile_bounds, zoom, image_size, screen_offset):
+    # Adjust pixel position with draw offset
+    adjusted_pixel_x = pixel[0] - screen_offset[0]
+    adjusted_pixel_y = pixel[1] - screen_offset[1]
+    
+    # Calculate the tile position
+    tile_x = adjusted_pixel_x // image_size[0] + tile_bounds['min_tile_x']
+    tile_y = adjusted_pixel_y // image_size[1] + tile_bounds['min_tile_y']
+    
+    # Calculate the offset within the tile
+    offset_x = adjusted_pixel_x % image_size[0]
+    offset_y = adjusted_pixel_y % image_size[1]
+    
+    # Calculate the point in the world coordinates
+    point = {
+        'x': tile_x * image_size[0] + offset_x,
+        'y': tile_y * image_size[1] + offset_y
+    }
+    
+    # Convert the point to latlng
+    lng = point['x'] / (image_size[0] * 2 ** zoom) * 360 - 180
+    lat = math.degrees(math.atan(math.sinh(math.pi * (1 - 2 * point['y'] / (image_size[1] * 2 ** zoom)))))
+    
+    return {
+        'lat': lat,
+        'lng': lng
+    }
+
 # Converts latlng mercator coordinates to tile coordinates
 def from_latlng_to_tile_coord(lat, lng, zoom, image_size):
     point = from_latlng_to_point(lat, lng, zoom, image_size)

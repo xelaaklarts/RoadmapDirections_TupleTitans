@@ -35,6 +35,7 @@ def main(latlng_list, map_type, detail, buffer=0):
     screen_offset = (0,0)
     current_mouse_pos = (0,0)
     last_mouse_pos = (0,0)
+    released = True
 
     # Main loop
     while running:
@@ -47,8 +48,21 @@ def main(latlng_list, map_type, detail, buffer=0):
         screen_offset = py_draw.calculate_draw_offset(screen_offset, last_mouse_pos, current_mouse_pos, tile_bounds, image_size)
         last_mouse_pos = current_mouse_pos
 
+        # Get the latlng position of the mouse
+        # Add to latlng_list if right mouse button is pressed
+        if key.is_right_mouse_pressed() and released:
+            point_latlng_postion = conversion.from_pixel_to_latlng(key.mouse_position(), tile_bounds, zoom, image_size, screen_offset)
+            coordinate = (point_latlng_postion['lat'], point_latlng_postion['lng'])
+            print(coordinate)
+            latlng_list.append((point_latlng_postion['lat'], point_latlng_postion['lng']))
+            released = False
+        # Ensures that only one point is added per click
+        elif not key.is_right_mouse_pressed():
+            released = True
+
         # Get the window size
-        window_size = py_draw.get_window_size()
+        # This was used by activation bounds debug
+        # window_size = py_draw.get_window_size()
 
         # Draw background
         py_draw.draw_background(screen, (255, 255, 255))
@@ -57,7 +71,7 @@ def main(latlng_list, map_type, detail, buffer=0):
         py_draw.draw_tiles_to_screen(screen, tile_array, image_size, screen_offset)
 
         # Draw grid
-        # py_draw.draw_grid(screen, conversion.calculate_delta_tiles_from_tile_bounds(tile_bounds), image_size, (0, 0, 0), 1, screen_offset)
+        py_draw.draw_grid(screen, conversion.calculate_delta_tiles_from_tile_bounds(tile_bounds), image_size, (0, 0, 0), 1, screen_offset)
 
         # Draw connecting lines
         py_draw.draw_connecting_lines(screen, latlng_list, zoom, tile_bounds, image_size , (255, 0, 0), 16, 0, (0, 0, 0), screen_offset)
@@ -105,20 +119,20 @@ if __name__ == "__main__":
 
     # Example latlng_list Western University
     latlng_list3 = [
-        (43.00602936065563, -81.2626887034016, "Start"),           # Point One
-        (43.005457938808725, -81.26464547108368),                  # Point Two
-        (43.00774527933711, -81.26578403298055),                   # Point Three
-        (43.007562814169994, -81.26658512578999),                  # Point Four
-        (43.00799976932445, -81.26992739018466),                   # Point Five
-        (43.007258055274754, -81.2699922030991),                   # Point Six
-        (43.00629302043631, -81.2703566291976),                    # Point Seven
-        (43.006107279776245, -81.27088670348355),                  # Point Eight
-        (43.0062647555907, -81.27177016070905),                    # Point Nine
-        (43.0066484499922, -81.2734772492384),                     # Point Ten
-        (43.00626081891621, -81.27484660781047),                   # Point Eleven
-        (43.00638195389022, -81.27517238263205),                   # Point Twelve
-        (43.006620185318695, -81.27537116060049),                  # Point Thirteen
-        (43.006620185318695, -81.27573558667208, "Destination")    # Point Fourteen
+        (43.00602936065563, -81.2626887034016, "Start"),   # Point One
+        (43.005457938808725, -81.26464547108368),          # Point Two
+        (43.00774527933711, -81.26578403298055),           # Point Three
+        (43.007562814169994, -81.26658512578999),          # Point Four
+        (43.00799976932445, -81.26992739018466),           # Point Five
+        (43.007258055274754, -81.2699922030991),           # Point Six
+        (43.00629302043631, -81.2703566291976),            # Point Seven
+        (43.006107279776245, -81.27088670348355),          # Point Eight
+        (43.0062647555907, -81.27177016070905),            # Point Nine
+        (43.0066484499922, -81.2734772492384),             # Point Ten
+        (43.00626081891621, -81.27484660781047),           # Point Eleven
+        (43.00638195389022, -81.27517238263205),           # Point Twelve
+        (43.006620185318695, -81.27537116060049),          # Point Thirteen
+        (43.006620185318695, -81.27573558667208, "END")    # Point Fourteen
     ]
 
     # Example latlng_list London L Shape

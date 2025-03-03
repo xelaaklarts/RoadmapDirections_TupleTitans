@@ -32,7 +32,7 @@ def draw_grid(screen, delta_tiles, image_size, colour, thickness, screen_offset)
 
 # Draws cursor circle to screen
 def draw_cursor_circle(screen, cursor_size):
-    if key.is_mouse_pressed():
+    if key.is_left_mouse_pressed():
         pygame.draw.circle(screen, (255, 0, 0), (key.mouse_position()[0], key.mouse_position()[1]), cursor_size + 6)
     pygame.draw.circle(screen, (0, 0, 0), (key.mouse_position()[0], key.mouse_position()[1]), cursor_size + 3)
     pygame.draw.circle(screen, (255, 255, 255), (key.mouse_position()[0], key.mouse_position()[1]), cursor_size)
@@ -94,8 +94,9 @@ def draw_activation_bounds(screen, window_size):
 
 # Calculates the new screen offset based on mouse movement
 # Does not allow the tiles to be dragged off screen!
+# Collision detection is based on the tile bounds, screen offset, image size, and window size
 def calculate_draw_offset(screen_offset, last_mouse_pos, current_mouse_pos, tile_bounds, image_size):
-    if key.is_mouse_pressed():
+    if key.is_left_mouse_pressed():
         delta_x = current_mouse_pos[0] - last_mouse_pos[0]
         delta_y = current_mouse_pos[1] - last_mouse_pos[1]
         last_mouse_pos = current_mouse_pos
