@@ -10,7 +10,7 @@ import key_handler as key
 FPS = 120
 
 # Main function
-def main(latlng_list, map_type, detail):
+def main(latlng_list, map_type, detail, buffer=0):
     # Make session
     session, image_size = create_session(map_type)
 
@@ -20,15 +20,15 @@ def main(latlng_list, map_type, detail):
 
     # Get the tile bounds
     tile_bounds = conversion.calculate_tile_bounds_given_coordinate_bounds(
-        conversion.find_coordinate_bounds_from_list(latlng_list), zoom, image_size)
+        conversion.find_coordinate_bounds_from_list(latlng_list), zoom, image_size, buffer)
 
     # Request tiles
     tile_array = load_tiles(session, zoom, tile_bounds, map_type)
 
     # Initialize pygame
     # Access screen width and height later for scaling
-    screen, clock, screen_width, screen_height = py_draw.initialize_pygame(
-        conversion.calculate_delta_tiles(tile_bounds), image_size)
+    screen, clock, window_size = py_draw.initialize_pygame(
+        conversion.calculate_delta_tiles_from_tile_bounds(tile_bounds), image_size)
     
     # Initialize variables
     running = True
@@ -44,8 +44,11 @@ def main(latlng_list, map_type, detail):
         # Calculate the new screen offset based on mouse movement
         # NOTE MOVE THIS OUT OF MAIN
         current_mouse_pos = key.mouse_position()
-        screen_offset = py_draw.calculate_draw_offset(screen_offset, last_mouse_pos, current_mouse_pos)
+        screen_offset = py_draw.calculate_draw_offset(screen_offset, last_mouse_pos, current_mouse_pos, tile_bounds, image_size)
         last_mouse_pos = current_mouse_pos
+
+        # Get the window size
+        window_size = py_draw.get_window_size()
 
         # Draw background
         py_draw.draw_background(screen, (255, 255, 255))
@@ -54,17 +57,20 @@ def main(latlng_list, map_type, detail):
         py_draw.draw_tiles_to_screen(screen, tile_array, image_size, screen_offset)
 
         # Draw grid
-        py_draw.draw_grid(screen, conversion.calculate_delta_tiles(tile_bounds), image_size, (0, 0, 0), 1, screen_offset)
+        # py_draw.draw_grid(screen, conversion.calculate_delta_tiles_from_tile_bounds(tile_bounds), image_size, (0, 0, 0), 1, screen_offset)
 
         # Draw connecting lines
         py_draw.draw_connecting_lines(screen, latlng_list, zoom, tile_bounds, image_size , (255, 0, 0), 16, 0, (0, 0, 0), screen_offset)
 
         # Draw latlng first and last points
         py_draw.draw_first_and_last_latlng_points(
-            screen, latlng_list, zoom, tile_bounds, image_size, (255, 0, 0), 14, (0, 0, 0), 2, (255, 255, 255), 30, 3, screen_offset)
+            screen, latlng_list, zoom, tile_bounds, image_size, (255, 0, 0), 14, (0, 0, 0), 2, (255, 255, 255), 30, 1, screen_offset)
 
         # Draw debug circle
-        py_draw.draw_cursor_circle(screen)
+        py_draw.draw_cursor_circle(screen, 10)
+
+        # Draw tile gen activation bounds
+        # py_draw.draw_activation_bounds(screen, window_size)
         
         # Update the display
         py_draw.update_screen()
@@ -133,7 +139,7 @@ if __name__ == "__main__":
     # latlng_list4 London L Shape
     # Call the main function
     # DO NOT SET DETAIL HIGHER THAN 3!! :)
-    main(latlng_list3, 'satellite', 2)
+    main(latlng_list3, 'satellite', 3, 1)
 
     ### Note To Self ###
     ### after dragging is added, add an appropriate screen size

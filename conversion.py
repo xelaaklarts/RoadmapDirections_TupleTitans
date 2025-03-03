@@ -9,7 +9,7 @@ def from_latlng_to_point(lat, lng, zoom, image_size):
         'y': image_size[1] / 2 * (1 + mercator / math.pi) * 2 ** zoom
     }
 
-# Converts latlng mercator coordinates to pixel coordinates
+# Converts latlng coordinates to pixel coordinates
 def from_latlng_to_pixel(lat, lng, zoom, tile_bounds, image_size):
     point = from_latlng_to_point(lat, lng, zoom, image_size)
     tile_x = point['x'] // image_size[0]
@@ -62,21 +62,29 @@ def find_coordinate_bounds_from_list(latlng_list):
     }
 
 # Calculates the tile bounds given a list of latlng coordinates and zoom
-def calculate_tile_bounds_given_coordinate_bounds(latlng_bounds, zoom, image_size):
+def calculate_tile_bounds_given_coordinate_bounds(latlng_bounds, zoom, image_size, buffer):
     latlng_list = [(latlng_bounds['min_lat'], latlng_bounds['min_lng']),
                    (latlng_bounds['max_lat'], latlng_bounds['max_lng'])]
 
     coordinate_bounds = find_coordinate_bounds_from_list(latlng_list)
 
     return {
-        'min_tile_x': from_latlng_to_tile_coord(coordinate_bounds['min_lat'], coordinate_bounds['min_lng'], zoom, image_size)['x'],
-        'max_tile_x': from_latlng_to_tile_coord(coordinate_bounds['max_lat'], coordinate_bounds['max_lng'], zoom, image_size)['x'],
+        'min_tile_x': from_latlng_to_tile_coord(coordinate_bounds['min_lat'], coordinate_bounds['min_lng'], zoom, image_size)['x'] - buffer,
+        'max_tile_x': from_latlng_to_tile_coord(coordinate_bounds['max_lat'], coordinate_bounds['max_lng'], zoom, image_size)['x'] + buffer,
         # Note: The y-coordinates are inverted in tile coordinates
-        'min_tile_y': from_latlng_to_tile_coord(coordinate_bounds['max_lat'], coordinate_bounds['min_lng'], zoom, image_size)['y'],
-        'max_tile_y': from_latlng_to_tile_coord(coordinate_bounds['min_lat'], coordinate_bounds['max_lng'], zoom, image_size)['y'],
+        'min_tile_y': from_latlng_to_tile_coord(coordinate_bounds['max_lat'], coordinate_bounds['min_lng'], zoom, image_size)['y'] - buffer,
+        'max_tile_y': from_latlng_to_tile_coord(coordinate_bounds['min_lat'], coordinate_bounds['max_lng'], zoom, image_size)['y'] + buffer,
         'zoom': zoom
     }
 
 # Calculates the total number of tiles given the tile bounds
-def calculate_delta_tiles(tile_bounds):
+def calculate_delta_tiles_from_tile_bounds(tile_bounds):
     return (tile_bounds['max_tile_x'] - tile_bounds['min_tile_x'] + 1), (tile_bounds['max_tile_y'] - tile_bounds['min_tile_y'] + 1)
+
+# Calculates the total number of pixels given the tile bounds and image size
+def calculate_delta_tile_pixels_from_tile_bounds(tile_bounds, image_size):
+    return (tile_bounds['max_tile_x'] - tile_bounds['min_tile_x'] + 1) * image_size[0], (tile_bounds['max_tile_y'] - tile_bounds['min_tile_y'] + 1) * image_size[1]
+
+# Calculates the total number of pixels given the delta tiles and image size
+def calculate_delta_pixels_from_delta_tiles(delta_tiles, image_size):
+    return delta_tiles[0] * image_size[0], delta_tiles[1] * image_size[1]
