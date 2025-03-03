@@ -11,7 +11,11 @@ import key_handler as key
 FPS = 120
 
 # Main function
-def main(latlng_list, map_type, detail, buffer=0):
+def main(latlng_list, map_type, detail, buffer):
+    if detail > 4:
+        print("Detail too high! Setting to 4.")
+        detail = 4
+
     # Make session
     session, image_size = create_session(map_type)
 
@@ -102,63 +106,8 @@ def main(latlng_list, map_type, detail, buffer=0):
 # Beginning of the script
 if __name__ == "__main__":
 
-    # Example latlng_list cities
-    latlng_list1 = [
-        (34.0522, -118.2437, "Los Angeles"),    # Los Angeles
-        (37.7749, -122.4194, "San Francisco"),  # San Francisco
-        (41.8781, -87.6298, "Chicago"),         # Chicago
-        (40.7128, -74.0060, "New York City")    # New York City
-    ]
+    # Load latlng list from file
+    latlng_list = conversion.from_txt_to_list("!Lshape_coord.txt")
 
-    # Example latlng_list 30 Carlton 1
-    latlng_list2 = [
-        (43.00072978730011, -81.23937016482253, "Start"), # Point One
-        (43.00042339276636, -81.2404807902414, "Two"),    # Point Two
-        (42.9994065948314, -81.23998494646074, "Three"),  # Point Three
-        (43.00019041833122, -81.23718438812998, "Four"),  # Point Four
-        (43.00218259138162, -81.23817319573764, "five"),  # Point Five
-        (43.00246718226428, -81.23715249106445, "Six"),   # Point Six
-        (43.0017160461225, -81.23679524445441, "END")     # Point Seven
-    ]
-
-    # Example latlng_list Western University
-    latlng_list3 = [
-        (43.00602936065563, -81.2626887034016, "Start"),   # Point One
-        (43.005457938808725, -81.26464547108368),          # Point Two
-        (43.00774527933711, -81.26578403298055),           # Point Three
-        (43.007562814169994, -81.26658512578999),          # Point Four
-        (43.00799976932445, -81.26992739018466),           # Point Five
-        (43.007258055274754, -81.2699922030991),           # Point Six
-        (43.00629302043631, -81.2703566291976),            # Point Seven
-        (43.006107279776245, -81.27088670348355),          # Point Eight
-        (43.0062647555907, -81.27177016070905),            # Point Nine
-        (43.0066484499922, -81.2734772492384),             # Point Ten
-        (43.00626081891621, -81.27484660781047),           # Point Eleven
-        (43.00638195389022, -81.27517238263205),           # Point Twelve
-        (43.006620185318695, -81.27537116060049),          # Point Thirteen
-        (43.006620185318695, -81.27573558667208, "END")    # Point Fourteen
-    ]
-
-    # Example latlng_list London L Shape
-    latlng_list4 = [
-        (43.000829888040506, -81.23819051256874, "One"),     # Point One
-        (43.000829888040506, -81.25035435025111, "Two"),     # Point Two
-        (43.000829888040506, -81.25515292852671, "Three"),   # Point Three
-        (43.000829888040506, -81.26182072047506, "Four"),    # Point Four
-        (43.000829888040506, -81.26675879234801, "Five"),    # Point Five
-        (43.000829888040506, -81.27521210166836, "Six"),     # Point Six
-        (42.996157297508980, -81.27521210166836, "Seven")    # Point Seven
-    ]
-
-    # Change this to whatever latlng_list test case you want to use:
-    # latlng_list1 Cities
-    # latlng_list2 30 Carlton
-    # latlng_list3 Western University
-    # latlng_list4 London L Shape
     # Call the main function
-    # DO NOT SET DETAIL HIGHER THAN 3!! :)
-    # Found an issue that the screen locks when tile detail is too low!!!
-    main(latlng_list3, 'satellite', 1, 0)
-
-    ### Note To Self ###
-    ### after dragging is added, add an appropriate screen size
+    main(latlng_list, 'satellite', 0, 0)
