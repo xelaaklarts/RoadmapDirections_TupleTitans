@@ -118,6 +118,7 @@ def calculate_delta_tile_pixels_from_tile_bounds(tile_bounds, image_size):
 def calculate_delta_pixels_from_delta_tiles(delta_tiles, image_size):
     return delta_tiles[0] * image_size[0], delta_tiles[1] * image_size[1]
 
+# txt to list conversion
 def from_txt_to_list(file_path):
     with open(file_path, 'r') as file:
         lines = file.readlines()

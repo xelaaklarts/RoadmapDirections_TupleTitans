@@ -92,6 +92,12 @@ def draw_tiles_to_screen(screen, tile_array, image_size, screen_offset):
 def draw_activation_bounds(screen, window_size):
     pygame.draw.rect(screen, (0, 255, 0), (window_size[0]/4, window_size[1]/4, 2*window_size[0]/4, 2*window_size[1]/4), 5)
 
+def draw_center_screen_circle(screen, window_size):
+    pygame.draw.circle(screen, (255, 0, 0), (window_size[0] / 2, window_size[1] / 2), 10)
+
+def draw_center_screen_to_0_0_offset(screen, window_size, screen_offset):
+    pygame.draw.line(screen, (0, 0, 0), (window_size[0]/2, window_size[1]/2), (screen_offset[0], screen_offset[1]), 5)
+
 # Calculates the new screen offset based on mouse movement
 # Does not allow the tiles to be dragged off screen!
 # Collision detection is based on the tile bounds, screen offset, image size, and window size
@@ -102,11 +108,20 @@ def calculate_draw_offset(screen_offset, last_mouse_pos, current_mouse_pos, tile
         delta_y = current_mouse_pos[1] - last_mouse_pos[1]
         last_mouse_pos = current_mouse_pos
         screen_offset =  (screen_offset[0] + delta_x, screen_offset[1] + delta_y)
-    # Collision detection
+    # Primary collision detection with center screen
+    delta_tiles = conversion.calculate_delta_tiles_from_tile_bounds(tile_bounds)
+    delta_tile_pixel = conversion.calculate_delta_pixels_from_delta_tiles(delta_tiles, image_size)
+    window_size = get_window_size()
+    if screen_offset[0] > window_size[0] / 2:
+        screen_offset = (window_size[0] / 2, screen_offset[1])
+    if screen_offset[1] > window_size[1] / 2:
+        screen_offset = (screen_offset[0], window_size[1] / 2)
+    if screen_offset[0] < window_size[0] / 2 - delta_tile_pixel[0]:
+        screen_offset = (window_size[0] / 2 - delta_tile_pixel[0], screen_offset[1])
+    if screen_offset[1] < window_size[1] / 2 - delta_tile_pixel[1]:
+        screen_offset = (screen_offset[0], window_size[1] / 2 - delta_tile_pixel[1])
+    # Secondary collision detection
     if collisions:
-        delta_tiles = conversion.calculate_delta_tiles_from_tile_bounds(tile_bounds)
-        delta_tile_pixel = conversion.calculate_delta_pixels_from_delta_tiles(delta_tiles, image_size)
-        window_size = get_window_size()
         if screen_offset[0] > 0:
             screen_offset = (0, screen_offset[1])
         if screen_offset[1] > 0:
