@@ -1,5 +1,6 @@
 # Import required libraries
 from request import load_tiles
+from request import remove_tiles
 from request import create_session
 import py_draw
 import conversion
@@ -95,6 +96,9 @@ def main(latlng_list, map_type, detail, buffer=0):
     # Quit pygame
     py_draw.pygame_quit()
 
+    # Remove tiles from file
+    remove_tiles()
+
 # Beginning of the script
 if __name__ == "__main__":
 
@@ -153,7 +157,8 @@ if __name__ == "__main__":
     # latlng_list4 London L Shape
     # Call the main function
     # DO NOT SET DETAIL HIGHER THAN 3!! :)
-    main(latlng_list3, 'satellite', 3, 1)
+    # Found an issue that the screen locks when tile detail is too low!!!
+    main(latlng_list3, 'satellite', 1, 0)
 
     ### Note To Self ###
     ### after dragging is added, add an appropriate screen size
