@@ -95,23 +95,26 @@ def draw_activation_bounds(screen, window_size):
 # Calculates the new screen offset based on mouse movement
 # Does not allow the tiles to be dragged off screen!
 # Collision detection is based on the tile bounds, screen offset, image size, and window size
-def calculate_draw_offset(screen_offset, last_mouse_pos, current_mouse_pos, tile_bounds, image_size):
+def calculate_draw_offset(screen_offset, last_mouse_pos, current_mouse_pos, tile_bounds, image_size, collisions):
+    # Mouse movement
     if key.is_left_mouse_pressed():
         delta_x = current_mouse_pos[0] - last_mouse_pos[0]
         delta_y = current_mouse_pos[1] - last_mouse_pos[1]
         last_mouse_pos = current_mouse_pos
         screen_offset =  (screen_offset[0] + delta_x, screen_offset[1] + delta_y)
-    delta_tiles = conversion.calculate_delta_tiles_from_tile_bounds(tile_bounds)
-    delta_tile_pixel = conversion.calculate_delta_pixels_from_delta_tiles(delta_tiles, image_size)
-    window_size = get_window_size()
-    if screen_offset[0] > 0:
-        screen_offset = (0, screen_offset[1])
-    if screen_offset[1] > 0:
-        screen_offset = (screen_offset[0], 0)
-    if screen_offset[0] < window_size[0] - delta_tile_pixel[0]:
-        screen_offset = (window_size[0] - delta_tile_pixel[0], screen_offset[1])
-    if screen_offset[1] < window_size[1] - delta_tile_pixel[1]:
-        screen_offset = (screen_offset[0], window_size[1] - delta_tile_pixel[1])
+    # Collision detection
+    if collisions:
+        delta_tiles = conversion.calculate_delta_tiles_from_tile_bounds(tile_bounds)
+        delta_tile_pixel = conversion.calculate_delta_pixels_from_delta_tiles(delta_tiles, image_size)
+        window_size = get_window_size()
+        if screen_offset[0] > 0:
+            screen_offset = (0, screen_offset[1])
+        if screen_offset[1] > 0:
+            screen_offset = (screen_offset[0], 0)
+        if screen_offset[0] < window_size[0] - delta_tile_pixel[0]:
+            screen_offset = (window_size[0] - delta_tile_pixel[0], screen_offset[1])
+        if screen_offset[1] < window_size[1] - delta_tile_pixel[1]:
+            screen_offset = (screen_offset[0], window_size[1] - delta_tile_pixel[1])
     return screen_offset
 
 # Gets the window size

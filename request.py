@@ -34,6 +34,7 @@ def create_session(map_type):
         raise Exception(f"Failed to create session: {response.status_code}, {response.text}")
 
 # Function to get tiles for a specific z, x, y tile coordinates
+# Note google claims that tile requests are free
 def get_tile(session, z, x, y, map_type):
     url = TILE_URL_TEMPLATE.format(z=z, x=x, y=y)
     if map_type == 'roadmap':

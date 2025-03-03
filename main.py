@@ -11,10 +11,11 @@ import key_handler as key
 FPS = 120
 
 # Main function
-def main(latlng_list, map_type, detail, buffer):
-    if detail > 4:
-        print("Detail too high! Setting to 4.")
-        detail = 4
+def main(latlng_list, map_type, detail, bounds_buffer, collisions, auto_delete):
+    max_detail = 3
+    if detail > max_detail:
+        print(f"Detail too high! Setting to {max_detail}.")
+        detail = 3
 
     # Make session
     session, image_size = create_session(map_type)
@@ -25,7 +26,7 @@ def main(latlng_list, map_type, detail, buffer):
 
     # Get the tile bounds
     tile_bounds = conversion.calculate_tile_bounds_given_coordinate_bounds(
-        conversion.find_coordinate_bounds_from_list(latlng_list), zoom, image_size, buffer)
+        conversion.find_coordinate_bounds_from_list(latlng_list), zoom, image_size, bounds_buffer)
 
     # Request tiles
     tile_array = load_tiles(session, zoom, tile_bounds, map_type)
@@ -40,7 +41,9 @@ def main(latlng_list, map_type, detail, buffer):
     screen_offset = (0,0)
     current_mouse_pos = (0,0)
     last_mouse_pos = (0,0)
-    released = True
+    is_right_mouse_released = True
+    is_plus_released = True
+    is_minus_released = True
 
     # Main loop
     while running:
@@ -50,20 +53,64 @@ def main(latlng_list, map_type, detail, buffer):
         # Calculate the new screen offset based on mouse movement
         # NOTE MOVE THIS OUT OF MAIN
         current_mouse_pos = key.mouse_position()
-        screen_offset = py_draw.calculate_draw_offset(screen_offset, last_mouse_pos, current_mouse_pos, tile_bounds, image_size)
+        screen_offset = py_draw.calculate_draw_offset(screen_offset, last_mouse_pos, current_mouse_pos, tile_bounds, image_size, collisions)
         last_mouse_pos = current_mouse_pos
 
         # Get the latlng position of the mouse
         # Add to latlng_list if right mouse button is pressed
-        if key.is_right_mouse_pressed() and released:
+        if key.is_right_mouse_pressed() and is_right_mouse_released:
             point_latlng_postion = conversion.from_pixel_to_latlng(key.mouse_position(), tile_bounds, zoom, image_size, screen_offset)
             coordinate = (point_latlng_postion['lat'], point_latlng_postion['lng'])
             print(coordinate)
             latlng_list.append((point_latlng_postion['lat'], point_latlng_postion['lng']))
-            released = False
+            # Get the tile bounds
+            tile_bounds = conversion.calculate_tile_bounds_given_coordinate_bounds(
+                conversion.find_coordinate_bounds_from_list(latlng_list), zoom, image_size, bounds_buffer)
+            # Request tiles
+            tile_array = load_tiles(session, zoom, tile_bounds, map_type)
+            is_right_mouse_released = False
         # Ensures that only one point is added per click
         elif not key.is_right_mouse_pressed():
-            released = True
+            is_right_mouse_released = True
+
+        # Check for zoom in
+        if key.is_plus_pressed() and is_plus_released:
+            detail += 1
+            if detail > max_detail:
+                detail = max_detail
+                print(f"Detail too high! Setting to {max_detail}.")
+            else:
+                zoom += 1
+                # Get the tile bounds
+                tile_bounds = conversion.calculate_tile_bounds_given_coordinate_bounds(
+                    conversion.find_coordinate_bounds_from_list(latlng_list), zoom, image_size, bounds_buffer)
+                # Request tiles
+                tile_array = load_tiles(session, zoom, tile_bounds, map_type)
+                print("Plus key pressed")
+                print(zoom)
+            is_plus_released = False
+        elif not key.is_plus_pressed():
+            is_plus_released = True
+        
+        # Check for zoom out
+        if key.is_minus_pressed() and is_minus_released:
+            detail -= 1
+            zoom -= 1
+            if zoom < 0:
+                zoom = 0
+                detail = detail + 1
+                print("Zoom too low! Setting to 0.")
+            else:
+                # Get the tile bounds
+                tile_bounds = conversion.calculate_tile_bounds_given_coordinate_bounds(
+                    conversion.find_coordinate_bounds_from_list(latlng_list), zoom, image_size, bounds_buffer)
+                # Request tiles
+                tile_array = load_tiles(session, zoom, tile_bounds, map_type)
+                print("Minus key pressed")
+                print(zoom)
+            is_minus_released = False
+        elif not key.is_minus_pressed():
+            is_minus_released = True
 
         # Get the window size
         # This was used by activation bounds debug
@@ -101,13 +148,14 @@ def main(latlng_list, map_type, detail, buffer):
     py_draw.pygame_quit()
 
     # Remove tiles from file
-    remove_tiles()
+    if auto_delete:
+        remove_tiles()
 
 # Beginning of the script
 if __name__ == "__main__":
 
     # Load latlng list from file
-    latlng_list = conversion.from_txt_to_list("!Lshape_coord.txt")
+    latlng_list = conversion.from_txt_to_list("!campus_coord.txt")
 
     # Call the main function
-    main(latlng_list, 'satellite', 0, 0)
+    main(latlng_list, 'satellite', 0, 0, False, True)
