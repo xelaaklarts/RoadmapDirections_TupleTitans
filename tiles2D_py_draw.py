@@ -1,6 +1,6 @@
 # Import required libraries
-import key_handler as key
-import conversion
+import tiles2D_conversion as conversion
+import tiles2D_key_handler as key
 import pygame
 
 # Initializes pygame
@@ -12,6 +12,7 @@ def initialize_pygame(delta_tiles, image_size):
     window_name = "Map Visualizer - Tuple Titans"
     pygame.display.set_caption(window_name)
     screen = pygame.display.set_mode((screen_width, screen_height), pygame.RESIZABLE)
+    pygame.mouse.set_visible(False) # Hide cursor here
     clock = pygame.time.Clock()
     return screen, clock, (screen_width, screen_height)
 
@@ -83,7 +84,12 @@ def draw_connecting_lines(screen, latlng_list, zoom, tile_bounds, image_size, li
 def draw_tiles_to_screen(screen, tile_array, image_size, screen_offset):
     for y, tile_row in enumerate(tile_array):
         for x, tile in enumerate(tile_row):
-            screen.blit(tile, (x * image_size[0] + screen_offset[0], y * image_size[1] + screen_offset[1]))
+            screen.blit(pygame.transform.scale(tile, image_size), (x * image_size[0] + screen_offset[0], y * image_size[1] + screen_offset[1]))
+
+# Draws tile bounds to screen
+def draw_tile_bounds(screen, tile_bounds, image_size, colour, width, screen_offset):
+    delta_pixel = conversion.calculate_delta_pixels_from_delta_tiles(conversion.calculate_delta_tiles_from_tile_bounds(tile_bounds), image_size)
+    pygame.draw.rect(screen, colour, (screen_offset[0], screen_offset[1], delta_pixel[0], delta_pixel[1]), width)
 
 # Draws tile gen activation bounds to screen
 # Debugging purposes only
@@ -102,12 +108,14 @@ def draw_center_screen_to_0_0_offset(screen, window_size, screen_offset):
 # Does not allow the tiles to be dragged off screen!
 # Collision detection is based on the tile bounds, screen offset, image size, and window size
 def calculate_draw_offset(screen_offset, last_mouse_pos, current_mouse_pos, tile_bounds, image_size, collisions, left_mouse_pressed):
+
     # Mouse movement
     if left_mouse_pressed:
         delta_x = current_mouse_pos[0] - last_mouse_pos[0]
         delta_y = current_mouse_pos[1] - last_mouse_pos[1]
         last_mouse_pos = current_mouse_pos
         screen_offset =  (screen_offset[0] + delta_x, screen_offset[1] + delta_y)
+
     # Primary collision detection with center screen
     delta_tiles = conversion.calculate_delta_tiles_from_tile_bounds(tile_bounds)
     delta_tile_pixel = conversion.calculate_delta_pixels_from_delta_tiles(delta_tiles, image_size)
@@ -120,6 +128,7 @@ def calculate_draw_offset(screen_offset, last_mouse_pos, current_mouse_pos, tile
         screen_offset = (window_size[0] / 2 - delta_tile_pixel[0], screen_offset[1])
     if screen_offset[1] < window_size[1] / 2 - delta_tile_pixel[1]:
         screen_offset = (screen_offset[0], window_size[1] / 2 - delta_tile_pixel[1])
+
     # Secondary collision detection with window bounds
     if collisions:
         if screen_offset[0] > 0:

@@ -1,10 +1,10 @@
 # Import required libraries
-from request import load_tiles
-from request import remove_tiles
-from request import create_session
-import key_handler as key
-import conversion
-import py_draw
+from tiles2D_request import load_tiles
+from tiles2D_request import remove_tiles
+from tiles2D_request import create_session
+import tiles2D_conversion as conversion
+import tiles2D_key_handler as key
+import tiles2D_py_draw as py_draw
 
 # Initialize constants
 FPS = 120
@@ -13,7 +13,7 @@ FPS = 120
 def main(latlng_list, map_type, detail, bounds_buffer, collisions, debug, auto_delete):
     
     # Set max detail
-    max_detail = 3
+    max_detail = 4
 
     # Set detail to max detail if too high
     if detail > max_detail:
@@ -137,9 +137,10 @@ def main(latlng_list, map_type, detail, bounds_buffer, collisions, debug, auto_d
         # Draw tiles to screen
         py_draw.draw_tiles_to_screen(screen, tile_array, image_size, screen_offset)
 
+        if debug:
         # Draw grid
-        py_draw.draw_grid(screen, conversion.calculate_delta_tiles_from_tile_bounds(tile_bounds),
-            image_size, (0, 0, 0), 1, screen_offset)
+            py_draw.draw_grid(screen, conversion.calculate_delta_tiles_from_tile_bounds(tile_bounds),
+                image_size, (0, 0, 0), 1, screen_offset)
 
         # Draw connecting lines
         py_draw.draw_connecting_lines(
@@ -149,6 +150,9 @@ def main(latlng_list, map_type, detail, bounds_buffer, collisions, debug, auto_d
         py_draw.draw_first_and_last_latlng_points(
             screen, latlng_list, zoom, tile_bounds, image_size,
             (255, 0, 0), 14, (0, 0, 0), 2, (255, 255, 255), 30, 1, screen_offset)
+        
+        # Draw tile bounds
+        py_draw.draw_tile_bounds(screen, tile_bounds, image_size, (0, 0, 0), 5, screen_offset)
 
         # Draw cursor circle
         py_draw.draw_cursor_circle(screen, 10, current_mouse_pos, left_mouse_pressed, events)
@@ -181,15 +185,25 @@ def main(latlng_list, map_type, detail, bounds_buffer, collisions, debug, auto_d
 if __name__ == "__main__":
 
     # Call the main function
-    main(latlng_list=conversion.from_txt_to_list("!campus_coord.txt"),
+    main(latlng_list=conversion.from_txt_to_list("tiles2D_test_coordinates\campus_coord.txt"),
          map_type='satellite',
-         detail=0,
+         detail=3,
          bounds_buffer=0,
-         collisions=False,
+         collisions=True,
          debug=False,
-         auto_delete=False)
+         auto_delete=True)
 
     ## NOTE TO SELF ##
     # Adding bounds and zooming out goes out of tile range
     # Add a zoomout cap based on additional bounds
     # Zoom feature does not account for bounds when!! Please fix.
+    # Zoom position struggles when zooming out because it does not account for aspect ratio change!
+    # However the ratio change does not know which side was cut/added to
+    # I should add a for loop that proloads tiles at all zoom levels before begining the program.
+    # This will help counter initial lap spikes.
+    # Make each route its own object
+    # Add route class
+
+    # Try applying tile bounds before adding +1 to zoom. this will force a square 9x9 shape that will be adequate for all cases.
+
+    # Calculate Distance

@@ -1,7 +1,7 @@
 # Import required libraries
 from pygame import key
 from pygame import event
-# Stand for key down and key up events
+# Stands for key down and key up events
 # They apply to all mouse buttons
 from pygame import MOUSEBUTTONUP
 from pygame import MOUSEBUTTONDOWN
