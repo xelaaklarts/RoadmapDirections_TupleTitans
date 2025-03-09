@@ -17,7 +17,7 @@ if not API_KEY:
     raise ValueError("API key not found. Please set the GOOGLE_MAPS_API_KEY environment variable.")
 
 # Create a directory for tiles if it doesn't exist
-tiles_directory = "tiles"
+tiles_directory = "tiles2D_tiles"
 if not exists(tiles_directory):
     makedirs(tiles_directory)
 
@@ -59,7 +59,7 @@ def get_tile(session, z, x, y, map_type):
     if response.status_code == 200:
         content_type = response.headers.get('Content-Type')
         if 'image' in content_type:
-            with open(f"tiles\\tile_{z}_{x}_{y}_0_{map_type}.png", "wb") as file:
+            with open(f"{tiles_directory}\\tile_{z}_{x}_{y}_0_{map_type}.png", "wb") as file:
                 # Save the image
                 file.write(response.content)
             print(f"Tile saved successfully. Named: tile_{z}_{x}_{y}_0_{map_type}.png")    
@@ -78,7 +78,7 @@ def request_tiles(session, tile_bounds, zoom, map_type):
     for x in range(tile_bounds['min_tile_x'], tile_bounds['max_tile_x'] + 1):
         for y in range(tile_bounds['min_tile_y'], tile_bounds['max_tile_y'] + 1):
             # Check if tile already exists
-            if not exists(f"tiles\\tile_{zoom}_{x}_{y}_0_{map_type}.png"):
+            if not exists(f"{tiles_directory}\\tile_{zoom}_{x}_{y}_0_{map_type}.png"):
                 get_tile(session, zoom, x, y, map_type)
 
 # Function to load tiles into a 2D array            
@@ -90,13 +90,13 @@ def load_tiles(session, zoom, tile_bounds, map_type):
     for y in range(tile_bounds['min_tile_y'], tile_bounds['max_tile_y'] + 1):
         tile_row = []
         for x in range(tile_bounds['min_tile_x'], tile_bounds['max_tile_x'] + 1):
-            tile_row.append(load(f"tiles\\tile_{zoom}_{x}_{y}_0_{map_type}.png"))
+            tile_row.append(load(f"{tiles_directory}\\tile_{zoom}_{x}_{y}_0_{map_type}.png"))
         tile_array.append(tile_row)   
     return tile_array
 
 # Function to remove tile file
 def remove_tiles():
-    shutil.rmtree("tiles")
+    shutil.rmtree(f"{tiles_directory}")
     
 # Example use
 # Print world map
