@@ -8,8 +8,8 @@ Before pushing to this repository please ensure the following:
 5. Please try to keep the repository as orginized as possible. Thank you.
 
 Tuple Titan Tags:
-tiles2D - Alex   - Viewport Rendering
-dv      - Luca   - Data Validation & UI
-YourTAG - Anna.I - Pathfinding & Route Info
-YourTAG - Anna.S - Enviromental Information
-YourTag - Tyler  - Geocode Conversion
+1. tiles2D - Alex   - Viewport Rendering
+2. dv      - Luca   - Data Validation & UI
+3. YourTAG - Anna.I - Pathfinding & Route Info
+4. YourTAG - Anna.S - Enviromental Information
+5. YourTag - Tyler  - Geocode Conversion
