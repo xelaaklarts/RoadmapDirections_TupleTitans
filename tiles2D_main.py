@@ -191,7 +191,7 @@ if __name__ == "__main__":
          bounds_buffer=0,
          collisions=True,
          debug=False,
-         auto_delete=True)
+         auto_delete=False)
 
     ## NOTE TO SELF ##
     # Adding bounds and zooming out goes out of tile range
