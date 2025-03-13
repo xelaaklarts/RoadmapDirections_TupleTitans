@@ -24,7 +24,9 @@ def main():
     # Ask user if additional route is desired
     # If yes, repeat process
 
-    # If no, initialize viewport rendering
+    # If no, preload tiles at all zoom levels with loading screen
+
+    # Initialize viewport rendering
 
     # END OF CODE
     pass
