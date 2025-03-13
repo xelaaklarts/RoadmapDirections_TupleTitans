@@ -1,5 +1,7 @@
 import requests
 import os
+#This geocoding class allows users to set addresses and place ids that they need to convert and convert them to Latitude 
+#and longitude coordinates. Each get method will return a List of [Lat,Lng]
 class Geocoding:
     API_KEY = os.getenv('geocode')
     
@@ -40,6 +42,7 @@ class Geocoding:
         idresponse=requests.get(self.base_url,params=self.idparams).json()
         print(self.idparams)
         if idresponse['status']=='OK':
+
             print(idresponse['results'][0]['formatted_address'])
             print(idresponse['results'][0]['geometry']['location'])
         else:
@@ -51,3 +54,6 @@ class Main:
     Alex = Geocoding()
     Alex.get_coord()
     Alex.get_placeidtocoord()
+    #reminders
+    #delete main testing method
+    #create list in place Id to coord
