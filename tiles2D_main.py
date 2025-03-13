@@ -188,10 +188,10 @@ if __name__ == "__main__":
     main(latlng_list=conversion.from_txt_to_list("tiles2D_test_coordinates\campus_coord.txt"),
          map_type='satellite',
          detail=3,
-         bounds_buffer=0,
+         bounds_buffer=2,
          collisions=True,
          debug=False,
-         auto_delete=True)
+         auto_delete=False)
 
     ## NOTE TO SELF ##
     # Adding bounds and zooming out goes out of tile range
@@ -203,7 +203,3 @@ if __name__ == "__main__":
     # This will help counter initial lap spikes.
     # Make each route its own object
     # Add route class
-
-    # Try applying tile bounds before adding +1 to zoom. this will force a square 9x9 shape that will be adequate for all cases.
-
-    # Calculate Distance
