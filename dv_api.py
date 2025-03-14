@@ -28,5 +28,3 @@ def addyvally(addy):
     else:
         print("Error:", response.status_code, response.text)
         return None
-    
-addyvally(dv_ui(0, 0))
