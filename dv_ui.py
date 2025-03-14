@@ -2,6 +2,9 @@
 import pygame 
 import sys 
 
+# Usage of function: dv_ui(exitValue, 0) will return a list variable with the street address and city
+# Ensure you use the function twice- once for the starting address and once for the destination address, 0 and 1
+
 def dv_ui(eval, dt):
     # pygame.init() will initialize all 
     # imported module 
