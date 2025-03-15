@@ -1,38 +1,35 @@
+import dv_ui
+import dv_api
+import GeoCode_Geocoding
+import ROU_routes
+import tiles2D_main
+
 def main():
     # Call on data validation UI
+    # Notes: Ideally a single screen should handle both address inputs,
+    # however current implenation works perfectly good aside frim open/close flash
+    start_address = dv_api.addyvally(dv_ui.dv_ui(0))
+    dest_address = dv_api.addyvally(dv_ui.dv_ui(1))
 
-    # Save initial address
+    # Geocode initial and final Address
+    start_latlng = GeoCode_Geocoding.Geocoding(start_address, None).get_coord()
+    dest_latlng = GeoCode_Geocoding.Geocoding(dest_address, None).get_coord()
 
-    # Geocode Initial Address
+    # Destination address enviromental info search (To Be Added)
 
-    # Inital address enviromental info search
-
-    # Call on data validation UI
-
-    # Save destination address
-
-    # Geocode destination address
-
-    # Destination address enviromental info search
-
-    # Tavel mode selection UI (Encorporate into data validation UI)
-
-    # Call on route pathfinding
-
-    # Save route related data items. (Distance, time, etc.)
+    # Call on route pathfinding (Temporary Fix)
+    # Once route code is updated, save route related data items. (Distance, time, etc.)
+    route = ROU_routes.get_route(start_latlng, dest_latlng)
 
     # Ask user if additional route is desired
-    # If yes, repeat process
-
+    # If yes, repeat process and add to route list
     # If no, preload tiles at all zoom levels with loading screen
+    # (Maybe, To Be Added)
 
-    # Initialize viewport rendering
+    # Initialize Viewport rendering
+    tiles2D_main.main(route)
 
     # END OF CODE
-    pass
 
 if __name__ == "__main__":
     main()
-
-# Noticed that diagram has incorrect call for data
-# validation after destination enviromental search.

@@ -10,7 +10,7 @@ import tiles2D_py_draw as py_draw
 FPS = 120
 
 # Main function
-def main(latlng_list, map_type, detail, bounds_buffer, collisions, debug, auto_delete):
+def main(latlng_list, map_type='satellite', detail=3, bounds_buffer=2, collisions=True, debug=False, auto_delete=False):
     
     # Set max detail
     max_detail = 4

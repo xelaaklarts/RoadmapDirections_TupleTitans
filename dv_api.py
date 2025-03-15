@@ -4,7 +4,7 @@ import os
 
 # Usage of function: addyvally(dv_ui(exitValue, 0)) will return a string value with the validated address
 
-API_KEY = os.getenv("GOOGLE_MAPS_API_KEY")
+API_KEY = os.getenv("API_KEY")
 URL = f"https://addressvalidation.googleapis.com/v1:validateAddress?key={API_KEY}"
 
 def addyvally(addy):

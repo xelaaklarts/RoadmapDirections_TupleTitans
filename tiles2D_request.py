@@ -10,7 +10,7 @@ CREATE_SESSION_URL = "https://tile.googleapis.com/tile/v1/createSession"
 TILE_URL_TEMPLATE = "https://tile.googleapis.com/v1/2dtiles/{z}/{x}/{y}"
 
 # Get the API key from environment variables
-API_KEY = getenv("GOOGLE_MAPS_API_KEY")
+API_KEY = getenv("API_KEY")
 
 # Check if API key is set
 if not API_KEY:

@@ -5,7 +5,7 @@ import sys
 # Usage of function: dv_ui(exitValue, 0) will return a list variable with the street address and city
 # Ensure you use the function twice- once for the starting address and once for the destination address, 0 and 1
 
-def dv_ui(eval, dt):
+def dv_ui(dt):
     # pygame.init() will initialize all 
     # imported module 
     pygame.init() 
@@ -24,7 +24,7 @@ def dv_ui(eval, dt):
 
     words = ['Starting Address: ', 'Starting City: ', 'NEXT', 'Destination Address: ', 'Destination City: ', 'GO']
     dtype = 0
-    if dt == 1:
+    if dt != 0:
         dtype = 3
 
     # create rectangle 
@@ -48,8 +48,9 @@ def dv_ui(eval, dt):
 
     active1 = False
     active2 = False
+    eval = False
 
-    while True: 
+    while not eval: 
         events = pygame.event.get()
         key_events = pygame.key.get_pressed()
 
@@ -57,8 +58,9 @@ def dv_ui(eval, dt):
 
         # if user types QUIT then the screen will close 
             if event.type == pygame.QUIT: 
-                pygame.quit() 
-                sys.exit() 
+                # pygame.quit() 
+                # sys.exit()
+                eval = True
 
             if event.type == pygame.MOUSEBUTTONDOWN: 
                 if starting_rect.collidepoint(event.pos): 
@@ -148,6 +150,9 @@ def dv_ui(eval, dt):
         # 60 frames should be passed. 
         clock.tick(60) 
 
-        if eval == True: 
-            z = [starting, destination]
-            return z
+        # if eval == True: 
+        #     z = [starting, destination]
+        #     return z
+
+    pygame.quit()
+    return starting, destination
