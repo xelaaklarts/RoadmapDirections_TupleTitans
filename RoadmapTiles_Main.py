@@ -1,7 +1,7 @@
 import dv_ui
 import dv_api
 import GeoCode_Geocoding
-import ROU_routes
+import Routes_OptimalPathFinding
 import tiles2D_main
 
 def main():
@@ -19,7 +19,7 @@ def main():
 
     # Call on route pathfinding (Temporary Fix)
     # Once route code is updated, save route related data items. (Distance, time, etc.)
-    route = ROU_routes.get_route(start_latlng, dest_latlng)
+    route = Routes_OptimalPathFinding.get_route(start_latlng, dest_latlng)
 
     # Ask user if additional route is desired
     # If yes, repeat process and add to route list
