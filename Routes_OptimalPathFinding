@@ -9,7 +9,7 @@ API_KEY = os.getenv("API_KEY")
 if not API_KEY:
     raise ValueError("API Key is missing. Set it in environment variables.")
 
-#url associated with the routes API specifically so it can be called off the cloud
+#url associated with the routes API specifically so it can be called off the google cloud
 url = "https://routes.googleapis.com/directions/v2:computeRoutes"
 
 #function getResponse which returns the response with specified parameters determined by a call
