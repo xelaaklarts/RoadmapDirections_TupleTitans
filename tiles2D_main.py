@@ -10,7 +10,7 @@ import tiles2D_py_draw as py_draw
 FPS = 120
 
 # Main function
-def main(latlng_list, map_type, detail, bounds_buffer, collisions, debug, auto_delete):
+def main(latlng_list, map_type='satellite', detail=3, bounds_buffer=2, collisions=True, debug=False, auto_delete=False):
     
     # Set max detail
     max_detail = 4
@@ -196,10 +196,10 @@ if __name__ == "__main__":
     ## NOTE TO SELF ##
     # Adding bounds and zooming out goes out of tile range
     # Add a zoomout cap based on additional bounds
-    # Zoom feature does not account for bounds when!! Please fix.
+    # Zoom feature does not account for bounds!! Please fix.
     # Zoom position struggles when zooming out because it does not account for aspect ratio change!
     # However the ratio change does not know which side was cut/added to
     # I should add a for loop that proloads tiles at all zoom levels before begining the program.
-    # This will help counter initial lap spikes.
+    # This will help counter initial lag spikes.
     # Make each route its own object
     # Add route class
